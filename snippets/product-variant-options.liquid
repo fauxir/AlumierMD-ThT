@@ -50,6 +50,7 @@
   {%- capture input_dataset -%}
     data-product-url="{{ value.product_url }}"
     data-option-value-id="{{ value.id }}"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
   {%- endcapture -%}
 
   {%- capture label_unavailable -%}

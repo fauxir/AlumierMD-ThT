@@ -61,20 +61,7 @@
           - div.price__regular: Displayed when there are no variants on sale
           - div.price__sale: Displayed when a variant is a sale
       {%- endcomment -%}
-      <div class="price__regular">
-
-              {% comment %} Find the discounted variant ID in the cart {% endcomment %}
-
-              {% assign in_cart = false %}
-              {% assign cart_item = nil %}
-              {% for item in cart.items %}
-                {% if product.selected_or_first_available_variant.id == item.variant_id %}
-                  {% assign in_cart = true %}
-                  {% assign cart_item = item %}
-                  {% break %}
-                {% endif %}
-              {% endfor %}
-              
+      <div class="price__regular">    
         {%- if product.quantity_price_breaks_configured? -%}
           {%- if show_compare_at_price and compare_at_price -%}
             {%- unless product.price_varies == false and product.compare_at_price_varies %}
@@ -100,47 +87,11 @@
             -}}
           </span>
         {%- else -%}
-          {% if in_cart and cart_item != nil %}
-            <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
-            <span>
-              <s class="price-item price-item--regular discounted-item__old-price">
-                {% if settings.currency_code_enabled %}
-                  {{ cart_item.original_price | money_with_currency }}
-                {% else %}
-                  {{ cart_item.original_price | money }}
-                {% endif %}
-              </s>
-            </span>
-            <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
-            <span class="price-item price-item--sale price-item--last">
-              {% if settings.currency_code_enabled %}
-                {{ cart_item.line_price | money_with_currency }}
-              {% else %}
-                {{ cart_item.line_price | money }}
-              {% endif %}
-            </span>
-          {% else %}
-            <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
-            <span class="price-item price-item--regular">
-              {{ money_price }}
-            </span>
-          {% endif %}
+        <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+        <span class="price-item price-item--regular">
+          {{ money_price }}
+        </span>
         {%- endif -%}
-
-
-        {% if in_cart and cart_item != nil %}
-          {% render 'sale-badge',
-            compare_at_price: cart_item.original_price,
-            price: cart_item.line_price,
-            show_percentage: settings.show_sale_percentage,
-            percentage_text: settings.sale_percentage_text,
-            font_size: settings.sale_badge_font_size,
-            font_color: settings.sale_badge_font_color,
-            background_color: settings.sale_badge_background,
-            animate: settings.sale_badge_animation
-          %}
-        {% endif %}
-
       </div>
       <div class="price__sale">
         {%- unless product.price_varies == false and product.compare_at_price_varies %}

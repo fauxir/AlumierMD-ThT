@@ -1055,6 +1055,109 @@ customElements.define('slideshow-component', SlideshowComponent);
 class VariantSelects extends HTMLElement {
   constructor() {
     super();
+    this.checkForDiscount = this.checkForDiscount.bind(this);
+    this.setupDiscountCheck();
+  }
+
+  checkForDiscount(variantId) {
+    if (!variantId) return;
+    
+    fetch('https://alumiermd-discounts.michaeladrian.co.uk/discounts')
+      .then(response => response.json())
+      .then(products => {
+        // Find matching product
+        const matchingProduct = products.find(product => product.productId === variantId.toString());
+        const priceContainer = document.querySelector('.price__regular .price-item--regular');
+        
+        if (matchingProduct && priceContainer) {
+          // Get only the first price from the text content
+          const rawPriceMatch = priceContainer.textContent.match(/£[\d,]+\.?\d*\s*GBP/);
+          const rawPrice = rawPriceMatch ? rawPriceMatch[0] : priceContainer.textContent.trim();
+          
+          // Clear any existing content
+          priceContainer.innerHTML = '';
+          
+          const formattedDiscountPrice = new Intl.NumberFormat('en-GB', {
+            style: 'currency',
+            currency: 'GBP'
+          }).format(matchingProduct.discountedPrice) + ' GBP';
+          
+          // Create price wrapper
+          const priceWrapper = document.createElement('div');
+          priceWrapper.style.display = 'flex';
+          priceWrapper.style.gap = '10px';
+          priceWrapper.style.alignItems = 'center';
+          
+          // Create strike-through original price
+          const originalPriceSpan = document.createElement('span');
+          originalPriceSpan.style.textDecoration = 'line-through';
+          originalPriceSpan.style.fontSize = '1.6rem';
+          originalPriceSpan.style.color = '#666';
+          originalPriceSpan.textContent = rawPrice;
+          
+          // Create discounted price
+          const discountedPriceSpan = document.createElement('span');
+          discountedPriceSpan.style.color = '#000';
+          discountedPriceSpan.textContent = formattedDiscountPrice;
+          
+          // Add prices to wrapper
+          priceWrapper.appendChild(originalPriceSpan);
+          priceWrapper.appendChild(discountedPriceSpan);
+          
+          // Add wrapper to container
+          priceContainer.appendChild(priceWrapper);
+          
+          const existingMsg = document.querySelector('.discount-success');
+          if (existingMsg) {
+            existingMsg.remove();
+          }
+          
+          const successMsg = document.createElement('div');
+          successMsg.className = 'discount-success';
+          successMsg.style.color = 'white';
+          successMsg.style.borderRadius = '20px';
+          successMsg.style.backgroundColor = 'black';
+          successMsg.style.display = 'flex';
+          successMsg.style.alignItems = 'center';
+          successMsg.style.justifyContent = 'center';
+          successMsg.style.fontSize = '1.2rem';
+          successMsg.style.width = 'fit-content';
+          successMsg.style.padding = '.3rem .9rem';
+          successMsg.style.marginTop = '5px';
+          successMsg.innerHTML = `On Sale`;
+          priceContainer.parentNode.appendChild(successMsg);
+        } else {
+          // Remove discount message if no match
+          const existingMsg = document.querySelector('.discount-success');
+          if (existingMsg) {
+            existingMsg.remove();
+          }
+
+          // Reset the price container to show original price
+          if (priceContainer && priceContainer.querySelector('div')) {
+            const priceMatch = priceContainer.textContent.match(/£[\d,]+\.?\d*\s*GBP/);
+            const originalPrice = priceMatch ? priceMatch[0] : priceContainer.textContent.trim();
+            priceContainer.innerHTML = originalPrice;
+          }
+        }
+      })
+      .catch(error => console.error('Error fetching discount:', error));
+  }
+
+  setupDiscountCheck() {
+    // Check for initial variant
+    const initialVariantId = this.querySelector('select option[selected], input[type="radio"]:checked')?.dataset?.variantId;
+    if (initialVariantId) {
+      this.checkForDiscount(initialVariantId);
+    }
+
+    // Subscribe to variant change events
+    subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
+      const variantId = event?.data?.variant?.id;
+      if (variantId) {
+        this.checkForDiscount(variantId);
+      }
+    });
   }
 
   connectedCallback() {
