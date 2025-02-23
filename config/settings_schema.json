@@ -1465,5 +1465,51 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "t:settings_schema.on_sale_badge.name",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_sale_percentage",
+        "label": "t:settings_schema.on_sale_badge.settings.show_sale_percentage.label",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "sale_percentage_text",
+        "label": "t:settings_schema.on_sale_badge.settings.sale_percentage_text.label",
+        "default": "off",
+        "info": "t:settings_schema.on_sale_badge.settings.sale_percentage_text.info"
+      },
+      {
+        "type": "range",
+        "id": "sale_badge_font_size",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "label": "t:settings_schema.on_sale_badge.settings.sale_badge_font_size.label",
+        "default": 14
+      },
+      {
+        "type": "color",
+        "id": "sale_badge_font_color",
+        "label": "t:settings_schema.on_sale_badge.settings.sale_badge_font_color.label",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "sale_badge_background",
+        "label": "t:settings_schema.on_sale_badge.settings.sale_badge_background.label",
+        "default": "#DE0000"
+      },
+      {
+        "type": "checkbox",
+        "id": "sale_badge_animation",
+        "label": "t:settings_schema.on_sale_badge.settings.sale_badge_animation.label",
+        "default": false
+      }
+    ]
   }
 ]

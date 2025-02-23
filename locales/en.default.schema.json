@@ -368,6 +368,30 @@
           "label": "Vertical space"
         }
       }
+    },
+    "on_sale_badge": {
+      "name": "On Sale Badge",
+      "settings": {
+        "show_sale_percentage": {
+          "label": "Show discount percentage"
+        },
+        "sale_percentage_text": {
+          "label": "Text after percentage",
+          "info": "Example: Enter 'off' to show '20% off'"
+        },
+        "sale_badge_font_size": {
+          "label": "Badge font size"
+        },
+        "sale_badge_font_color": {
+          "label": "Badge text color"
+        },
+        "sale_badge_background": {
+          "label": "Badge background color"
+        },
+        "sale_badge_animation": {
+          "label": "Enable animation"
+        }
+      }
     }
   },
   "sections": {

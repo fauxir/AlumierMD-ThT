@@ -1,0 +1,51 @@
+{% comment %}
+  Renders a sale badge with optional percentage discount
+
+  Accepts:
+  - compare_at_price: {Number} Original price (required)
+  - price: {Number} Sale price (required)
+  - show_percentage: {Boolean} Whether to show the percentage discount (optional)
+  - percentage_text: {String} Text to show after the percentage (optional)
+  - font_size: {Number} Font size in pixels (optional)
+  - font_color: {String} Font color (optional)
+  - background_color: {String} Background color (optional)
+  - animate: {Boolean} Whether to enable animation (optional)
+
+  Usage:
+  {% render 'sale-badge',
+    compare_at_price: product.compare_at_price,
+    price: product.price,
+    show_percentage: settings.show_sale_percentage,
+    percentage_text: settings.sale_percentage_text,
+    font_size: settings.sale_badge_font_size,
+    font_color: settings.sale_badge_font_color,
+    background_color: settings.sale_badge_background,
+    animate: settings.sale_badge_animation
+  %}
+{% endcomment %}
+
+{{ 'sale-badge.css' | asset_url | stylesheet_tag }}
+
+{% if compare_at_price > price %}
+  {% assign discount_percentage = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round -%}
+<span class="price--on-sale"> 
+  <span 
+    class="badge {% if show_percentage %}price__badge-sale-percentage{% if animate %} animate-badge{% endif %}{% else %} price__badge-sale color-{{ settings.sale_badge_color_scheme }}{% endif %}"
+    {% if show_percentage %}
+    style="
+      font-size: {{ font_size }}px; 
+      color: {{ font_color }}; 
+      background-color: {{ background_color }};
+    "
+    {% endif %}
+    role="status"
+    aria-label="{% if show_percentage %}{{ 'accessibility.sale_badge.discount_announcement' | t: savings: discount_percentage, text: percentage_text }}{% else %}{{ 'products.product.on_sale' | t }}{% endif %}"
+  >
+    {% if show_percentage %}
+      {{ discount_percentage }}% {{ percentage_text }}
+    {% else %}
+      {{ 'products.product.on_sale' | t }}
+    {% endif %}
+  </span>
+</span>
+{% endif %}
