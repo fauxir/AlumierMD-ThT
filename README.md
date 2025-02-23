@@ -33,13 +33,12 @@ Created `sales-badge.liquid` to handle two main pricing scenarios:
 ### Future Improvements
 1. UI Enhancements
   - Add border radius controls
-  - Extend sales badge to Product Display Layout (PDL)
+  - Extend sales badge to Product List Page 
   - Add sales badge to cart interface
 
 2. Code Quality
   - Implement Theme Check
   - Add code formatting standards
-  - Enhance deployment checks
 
 3. Accessibility & Internationalization
   - Expand accessibility features
