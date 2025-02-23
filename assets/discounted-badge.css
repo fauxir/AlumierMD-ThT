@@ -1,0 +1,5 @@
+.discounted-item__old-price {
+    color: rgba(var(--color-foreground), 0.75);
+    font-size: 1.6rem;
+    letter-spacing: 0.07rem;
+  }
